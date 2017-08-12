@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/ingredient_name"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/size_twenty"
+        android:layout_marginEnd="@dimen/size_twenty"
+        android:text="@string/names"/>
+
+    <TextView
+        android:id="@+id/ingredient_quantity"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/size_four"
+        android:layout_marginEnd="@dimen/size_four"
+        android:text="@string/quantity"/>
+
+    <TextView
+        android:id="@+id/ingredient_measure"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/measure"/>
+</LinearLayout>

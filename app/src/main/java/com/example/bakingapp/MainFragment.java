@@ -73,7 +73,7 @@ public class MainFragment extends Fragment implements ListItemClickListener {
 
         mainBinding.mainView.setHasFixedSize(true);
 
-        MainAdapter adapter = new MainAdapter(arrayList, this);
+        MainAdapter adapter = new MainAdapter(arrayList, this, getActivity());
         mainBinding.mainView.setAdapter(adapter);
 
         return mainBinding.getRoot();

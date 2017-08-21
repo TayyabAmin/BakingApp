@@ -20,8 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailActivity" />
+        <activity android:name=".IngredientActivity"/>
 
-        <receiver android:name=".BackingAppWidget">
+        <receiver android:name="com.example.widget.BackingAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -30,6 +31,17 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/backing_app_widget_info" />
         </receiver>
+
+        <service
+            android:name="com.example.widget.ListWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <provider
+            android:authorities="com.example.bakingapp"
+            android:name="com.example.data.IngredientContentProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

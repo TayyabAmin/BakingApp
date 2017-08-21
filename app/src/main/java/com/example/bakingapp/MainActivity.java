@@ -1,6 +1,11 @@
 package com.example.bakingapp;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.data.BakingContract;
 import com.example.model.IngredientData;
 import com.example.model.RecipeData;
 import com.example.model.StepsData;
@@ -40,10 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFragmentAdded = false;
 //    private ActivityMainBinding mainBinding;
 
+    private static final String MyPREFERENCES = "RecipeList";
+    private SharedPreferences sharedpreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         if (savedInstanceState != null) {
             recipeArrayList = savedInstanceState.getParcelableArrayList(LIFECYCLE_RECIPES);
@@ -109,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             stepsHashMap = new HashMap<>();
             recipeArrayList = new ArrayList<>();
             recipeIds = new ArrayList<>();
+            boolean isDataExist = checkDataExist();
             for (int i=0; i<response.length(); i++) {
                 JSONObject jsonObject = response.getJSONObject(i);
                 RecipeData recipeData = new RecipeData();
@@ -121,9 +133,10 @@ public class MainActivity extends AppCompatActivity {
 
                 recipeIds.add(jsonObject.getInt("id"));
 
-
                 ingredientArrayList = new ArrayList<>();
                 JSONArray jsonArray = jsonObject.getJSONArray("ingredients");
+
+
                 for (int j=0; j<jsonArray.length(); j++) {
                     JSONObject jsonObjectIngredient = jsonArray.getJSONObject(j);
                     IngredientData ingredientData = new IngredientData();
@@ -132,9 +145,16 @@ public class MainActivity extends AppCompatActivity {
                     ingredientData.setRecipeIngredient(jsonObjectIngredient.getString("ingredient"));
 
                     ingredientArrayList.add(ingredientData);
+
+                    //insert Ingredient list in database
+                    if (!isDataExist) {
+                        addIngredient(jsonObjectIngredient.getString("measure"),
+                                jsonObjectIngredient.getString("quantity"),
+                                jsonObjectIngredient.getString("ingredient"),
+                                jsonObject.getInt("id"));
+                    }
                 }
                 ingredientHashMap.put(i, ingredientArrayList);
-
 
                 stepsArrayList = new ArrayList<>();
                 JSONArray jsonArraySteps = jsonObject.getJSONArray("steps");
@@ -151,8 +171,33 @@ public class MainActivity extends AppCompatActivity {
                 }
                 stepsHashMap.put(i, stepsArrayList);
             }
+
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            for (int i =0; i<recipeArrayList.size(); i++) {
+                editor.putString("recipe_"+i, recipeArrayList.get(i).getRecipeName());
+            }
+            editor.putInt("recipe_size", recipeArrayList.size());
+            editor.apply();
+
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void addIngredient(String measure, String quantity, String name, int recipe_id) {
+
+        Uri uri = null;
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BakingContract.IngredientEntry.INGREDIENT_MEASURE, measure);
+            contentValues.put(BakingContract.IngredientEntry.INGREDIENT_QUANTITY, quantity);
+            contentValues.put(BakingContract.IngredientEntry.INGREDIENT_NAME, name);
+            contentValues.put(BakingContract.IngredientEntry.RECIPE_ID, recipe_id);
+
+            uri = getContentResolver().insert(BakingContract.IngredientEntry.CONTENT_URI, contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Excp", e.getMessage());
         }
     }
 
@@ -184,5 +229,25 @@ public class MainActivity extends AppCompatActivity {
         outState.putIntegerArrayList(LIFECYCLE_RECIPE_IDS, recipeIds);
         outState.putBoolean(LIFECYCLE_FRAGMENT, isFragmentAdded);
         super.onSaveInstanceState(outState);
+    }
+
+    private boolean checkDataExist() {
+        try {
+            Cursor cursor = getContentResolver().query(BakingContract.IngredientEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);
+
+            if (cursor.getCount() <= 0) {
+                cursor.close();
+                return false;
+            }
+            cursor.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

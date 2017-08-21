@@ -21,7 +21,7 @@ public class DetailStepsAdapter  extends RecyclerView.Adapter<DetailStepsAdapter
 
     private final ArrayList<StepsData> stepsArrayList;
     private final ListItemClickListener mOnClickListener;
-    private Context mContext;
+    private final Context mContext;
 
     public DetailStepsAdapter(Context context, ArrayList<StepsData> stepsArrayList, ListItemClickListener listener) {
         this.stepsArrayList = stepsArrayList;
@@ -53,7 +53,12 @@ public class DetailStepsAdapter  extends RecyclerView.Adapter<DetailStepsAdapter
 
     @Override
     public int getItemCount() {
-        return stepsArrayList.size() + 1;
+        try {
+            return stepsArrayList.size() + 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

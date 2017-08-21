@@ -1,17 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="#fdfdfd"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
-    <ImageView
-        android:id="@+id/appwidget_img"
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:src="@drawable/appwidget"
-        android:contentDescription="@string/app_name" />
+        android:text="@string/ingredients"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/colorAccent"
+        android:padding="@dimen/size_twelve"
+        android:textSize="@dimen/textsize_twenty"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_widget_listview"
+        android:dividerHeight="1dp"
+        android:divider="@android:color/darker_gray"/>
 
 </LinearLayout>

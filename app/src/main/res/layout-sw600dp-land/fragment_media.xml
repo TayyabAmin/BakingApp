@@ -28,15 +28,29 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0" />
 
+        <ImageView
+            android:id="@+id/media_img"
+            android:layout_width="@dimen/size_sixty"
+            android:layout_height="@dimen/size_sixty"
+            android:src="@drawable/appwidget"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintTop_toTopOf="@+id/horizontalHalf"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
         <TextView
             android:id="@+id/media_desc_txt"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="@dimen/size_twelve"
-            app:layout_constraintTop_toTopOf="@+id/horizontalHalf"
+            android:text=""
+            app:layout_constraintTop_toTopOf="@+id/media_img"
             app:layout_constraintBottom_toTopOf="@+id/previous_iv"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/media_img"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/previous_iv"

@@ -54,7 +54,7 @@ public class DetailFragment extends Fragment implements ListItemClickListener {
 //        int recipeId = getArguments().getInt("recipe_id");
         clickedIndex = getArguments().getInt("ingredient_key");
 
-        HashMap<Integer, ArrayList> stepsList;
+        HashMap<Integer, ArrayList> stepsList = new HashMap<>();
         stepsList = (HashMap) getArguments().getSerializable("steps");
 
         /*LinearLayoutManager layoutManagerIngredient = new LinearLayoutManager(getContext());
@@ -88,11 +88,15 @@ public class DetailFragment extends Fragment implements ListItemClickListener {
     }*/
 
     private void stepsList(HashMap<Integer, ArrayList> stepsList) {
-        for (Map.Entry<Integer, ArrayList> entry : stepsList.entrySet()) {
+        try {
+            for (Map.Entry<Integer, ArrayList> entry : stepsList.entrySet()) {
 
-            if (entry.getKey() == clickedIndex) {
-                mStepsList = entry.getValue();
+                if (entry.getKey() == clickedIndex) {
+                    mStepsList = entry.getValue();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

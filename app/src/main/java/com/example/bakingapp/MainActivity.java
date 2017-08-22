@@ -179,6 +179,13 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("recipe_size", recipeArrayList.size());
             editor.apply();
 
+            /*String MyPREFERENCES = "last_seen_ingredient";
+            SharedPreferences pref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = pref.edit();
+            editor1.putInt("last_seen", 1);
+            editor1.putInt("recipe_size", 10);
+            editor1.apply();*/
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -63,7 +63,6 @@ public class MediaFragment extends Fragment implements View.OnClickListener {
         if (savedInstanceState != null) {
             playerState = savedInstanceState.getLong("player");
         }
-        initializePlayer(Uri.parse(mStepsList.get(stepPosition).getVideoUrl()));
 
         mediaBinding.previousIv.setOnClickListener(this);
         mediaBinding.nextIv.setOnClickListener(this);
@@ -79,6 +78,12 @@ public class MediaFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         Log.d("value", "value");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializePlayer(Uri.parse(mStepsList.get(stepPosition).getVideoUrl()));
     }
 
     private void initializePlayer(Uri mediaUri) {

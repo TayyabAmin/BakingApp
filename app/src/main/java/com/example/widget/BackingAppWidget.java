@@ -18,33 +18,49 @@ import com.example.bakingapp.R;
  */
 public class BackingAppWidget extends AppWidgetProvider {
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static final String WIDGET_IDS_KEY ="mywidgetproviderwidgetids";
+    public static final String WIDGET_DATA_KEY ="mywidgetproviderwidgetdata";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.hasExtra(WIDGET_IDS_KEY)) {
+            int[] appWidgetIds = intent.getExtras().getIntArray(WIDGET_IDS_KEY);
+            for (int appWidgetId : appWidgetIds) {
+                updateAppWidget(context, AppWidgetManager.getInstance(context), appWidgetId);
+            }
+        } else super.onReceive(context, intent);
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-//            updateAppWidget(context, appWidgetManager, appWidgetId);
-            RemoteViews rv = new RemoteViews(context.getPackageName(),
-                    R.layout.backing_app_widget);
+            updateAppWidget(context, appWidgetManager, appWidgetId);
+        }
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
 
-            Intent intent = new Intent(context, ListWidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        RemoteViews rv = new RemoteViews(context.getPackageName(),
+                R.layout.backing_app_widget);
 
-            rv.setRemoteAdapter(R.id.app_widget_listview, intent);
+        Intent intent = new Intent(context, ListWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            // Set the DetailActivity intent to launch when clicked
-            Intent appIntent = new Intent(context, IngredientActivity.class);
-            PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setPendingIntentTemplate(R.id.app_widget_listview, appPendingIntent);
+        rv.setRemoteAdapter(R.id.app_widget_listview, intent);
+
+        // Set the DetailActivity intent to launch when clicked
+        Intent appIntent = new Intent(context, IngredientActivity.class);
+        PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setPendingIntentTemplate(R.id.app_widget_listview, appPendingIntent);
 //            rv.setOnClickPendingIntent(R.id.app_widget_listview, appPendingIntent);
 
 //            rv.setOnClickFillInIntent();
 
-            appWidgetManager.updateAppWidget(appWidgetId, rv);
-        }
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        appWidgetManager.updateAppWidget(appWidgetId, rv);
     }
 
     @Override
